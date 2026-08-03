@@ -5,6 +5,8 @@
       "src": "server.js",
       "use": "@vercel/node",
       "config": {
+        "maxDuration": 300,
+        "memory": 2048,
         "includeFiles": [
           "public/**",
           "node_modules/ffmpeg-static/ffmpeg",
@@ -14,12 +16,6 @@
       }
     }
   ],
-  "functions": {
-    "server.js": {
-      "maxDuration": 300,
-      "memory": 2048
-    }
-  },
   "routes": [
     { "src": "/api/(.*)", "dest": "server.js" },
     { "src": "/(.*)", "dest": "server.js" }
