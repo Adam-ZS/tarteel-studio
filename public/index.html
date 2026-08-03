@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071b18">
+  <title>Tarteel Studio — Qur'an Recitation Recorder</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Tarteel Studio home">
+      <span class="brand-mark" aria-hidden="true">۞</span>
+      <span>
+        <strong>Tarteel Studio</strong>
+        <small>تسجيل وتجميل التلاوة</small>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <span class="privacy-pill">Local processing • no cloud upload</span>
+      <button class="icon-button" id="themeToggle" title="Toggle light/dark mode" aria-label="Toggle theme">☾</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <aside class="sidebar panel">
+      <div class="sidebar-head">
+        <div>
+          <span class="eyebrow">114 SURAHS</span>
+          <h1>Choose a sūrah</h1>
+        </div>
+        <button id="collapseSidebar" class="icon-button mobile-only" aria-label="Close surah list">×</button>
+      </div>
+      <label class="search-box">
+        <span>⌕</span>
+        <input id="surahSearch" type="search" placeholder="Search Arabic or English…" autocomplete="off">
+      </label>
+      <div id="surahList" class="surah-list" aria-live="polite"></div>
+      <footer class="sidebar-footer">
+        <span>Qur'an text remains unchanged.</span>
+        <a href="#about">About & credits</a>
+      </footer>
+    </aside>
+
+    <section class="workspace">
+      <div class="mobile-toolbar">
+        <button id="openSidebar" class="secondary-button">☰ Sūrahs</button>
+        <span id="mobileCurrentSurah">Loading…</span>
+      </div>
+
+      <section class="reader panel hero-panel">
+        <div class="reader-topline">
+          <div>
+            <span class="eyebrow" id="surahType">MECCAN</span>
+            <h2 id="surahHeading">Loading Qur'an…</h2>
+            <p id="surahMeta">Please wait</p>
+          </div>
+          <div class="range-controls">
+            <label>From <input id="rangeStart" type="number" min="1" value="1"></label>
+            <label>To <input id="rangeEnd" type="number" min="1" value="7"></label>
+            <button id="applyRange" class="ghost-button">Apply</button>
+          </div>
+        </div>
+
+        <div class="ayah-stage" id="ayahStage" tabindex="0" aria-label="Current ayah reader">
+          <div class="ayah-orbit orbit-one"></div>
+          <div class="ayah-orbit orbit-two"></div>
+          <div class="ayah-counter" id="ayahCounter">1 / 7</div>
+          <div class="ayah-text" id="ayahText" lang="ar" dir="rtl">بِسْمِ ٱللَّهِ</div>
+          <div class="transliteration" id="transliteration"></div>
+          <div class="stage-progress"><span id="stageProgress"></span></div>
+        </div>
+
+        <div class="reader-controls">
+          <button id="prevAyah" class="round-button" title="Previous ayah (left arrow)" aria-label="Previous ayah">←</button>
+          <button id="markAyah" class="primary-button">Mark this āyah</button>
+          <button id="nextAyah" class="round-button" title="Next ayah (space/right arrow)" aria-label="Next ayah">→</button>
+        </div>
+        <div class="reader-options">
+          <label class="toggle"><input id="showTransliteration" type="checkbox"><span></span> Transliteration</label>
+          <label class="toggle"><input id="autoAdvance" type="checkbox"><span></span> Auto-advance</label>
+          <label class="compact-field">Every <input id="advanceSeconds" type="number" min="2" max="120" value="10"> sec</label>
+          <span class="shortcut-help">Space: next • ←/→: navigate • M: mark</span>
+        </div>
+      </section>
+
+      <div class="two-column">
+        <section class="panel recording-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">SOURCE</span>
+              <h3>Record or upload</h3>
+            </div>
+            <span id="recordingState" class="state-badge">Ready</span>
+          </div>
+
+          <canvas id="waveform" width="900" height="180" aria-label="Live audio waveform"></canvas>
+          <div class="timer" id="timer">00:00.0</div>
+
+          <div class="record-controls">
+            <button id="recordButton" class="record-button" aria-label="Start recording"><span></span></button>
+            <button id="pauseButton" class="secondary-button" disabled>Pause</button>
+            <button id="stopButton" class="secondary-button" disabled>Stop</button>
+          </div>
+
+          <div class="source-grid">
+            <label class="file-drop" id="fileDrop">
+              <input id="audioUpload" type="file" accept="audio/*,.mp3,.wav,.m4a,.aac,.flac,.ogg,.webm">
+              <strong>Drop an MP3 or audio file</strong>
+              <span>or click to choose a previous recording</span>
+            </label>
+            <div class="device-box">
+              <label>Microphone
+                <select id="microphoneSelect"><option value="">Default microphone</option></select>
+              </label>
+              <label class="toggle"><input id="monitorInput" type="checkbox"><span></span> Headphone monitor</label>
+              <small>Use headphones before enabling monitoring.</small>
+            </div>
+          </div>
+
+          <audio id="sourcePlayer" controls preload="metadata"></audio>
+          <div class="source-info" id="sourceInfo">No audio selected yet.</div>
+        </section>
+
+        <section class="panel timeline-panel">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">LIVE LYRICS</span>
+              <h3>Āyah timing</h3>
+            </div>
+            <span id="markerCount" class="state-badge">0 markers</span>
+          </div>
+          <p class="muted">While recording or playing an upload, press “Next” after finishing an āyah. The video will switch text at those exact moments.</p>
+          <div class="timeline-actions">
+            <button id="captureMarker" class="secondary-button">Mark current time</button>
+            <button id="autoDistribute" class="secondary-button">Auto distribute</button>
+            <button id="clearMarkers" class="ghost-button danger-text">Clear</button>
+          </div>
+          <div id="timelineList" class="timeline-list"></div>
+        </section>
+      </div>
+
+      <section class="panel effects-panel">
+        <div class="panel-heading effects-heading">
+          <div>
+            <span class="eyebrow">RECITATION ENHANCEMENT</span>
+            <h3>Sound shaping</h3>
+            <p class="muted">Original ambience presets—not a clone of any named reciter.</p>
+          </div>
+          <div class="preview-actions">
+            <button id="previewButton" class="secondary-button" disabled>Preview effects</button>
+            <button id="stopPreviewButton" class="ghost-button" disabled>Stop preview</button>
+          </div>
+        </div>
+
+        <div class="preset-row" id="presetRow">
+          <button class="preset active" data-preset="clear">Clear Studio</button>
+          <button class="preset" data-preset="mihrab">Warm Mihrab</button>
+          <button class="preset" data-preset="masjid">Grand Masjid</button>
+          <button class="preset" data-preset="night">Night Prayer</button>
+          <button class="preset" data-preset="broadcast">Broadcast</button>
+          <button class="preset" data-preset="custom">Custom</button>
+        </div>
+
+        <div class="effects-grid">
+          <label class="slider-control"><span>Noise cleanup <output data-output="cleanup">60</output></span><input data-effect="cleanup" type="range" min="0" max="100" value="60"></label>
+          <label class="slider-control"><span>Noise gate <output data-output="gate">25</output></span><input data-effect="gate" type="range" min="0" max="100" value="25"></label>
+          <label class="slider-control"><span>High-pass <output data-output="highpass">70 Hz</output></span><input data-effect="highpass" type="range" min="20" max="220" value="70"></label>
+          <label class="slider-control"><span>Low-pass <output data-output="lowpass">15000 Hz</output></span><input data-effect="lowpass" type="range" min="4500" max="20000" step="100" value="15000"></label>
+          <label class="slider-control"><span>Warmth <output data-output="warmth">+1.5 dB</output></span><input data-effect="warmth" type="range" min="-8" max="8" step="0.5" value="1.5"></label>
+          <label class="slider-control"><span>Clarity <output data-output="clarity">+2 dB</output></span><input data-effect="clarity" type="range" min="-8" max="8" step="0.5" value="2"></label>
+          <label class="slider-control"><span>De-esser <output data-output="deesser">35</output></span><input data-effect="deesser" type="range" min="0" max="100" value="35"></label>
+          <label class="slider-control"><span>Compression <output data-output="compression">55</output></span><input data-effect="compression" type="range" min="0" max="100" value="55"></label>
+          <label class="slider-control"><span>Room reverb <output data-output="reverb">28</output></span><input data-effect="reverb" type="range" min="0" max="100" value="28"></label>
+          <label class="slider-control"><span>Echo tail <output data-output="echo">10</output></span><input data-effect="echo" type="range" min="0" max="100" value="10"></label>
+          <label class="slider-control"><span>Stereo space <output data-output="stereo">25</output></span><input data-effect="stereo" type="range" min="0" max="100" value="25"></label>
+          <label class="slider-control"><span>Tone shift <output data-output="tone">0 semitones</output></span><input data-effect="tone" type="range" min="-2" max="2" step="0.1" value="0"></label>
+          <label class="slider-control"><span>Target loudness <output data-output="loudness">-16 LUFS</output></span><input data-effect="loudness" type="range" min="-20" max="-12" step="1" value="-16"></label>
+        </div>
+        <div class="notice">The “tone shift” control changes overall vocal color slightly. It is not automatic maqām correction and should be used gently.</div>
+      </section>
+
+      <section class="panel export-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="eyebrow">EXPORT</span>
+            <h3>Build your final recitation</h3>
+          </div>
+          <div id="exportStatus" class="state-badge">Waiting for audio</div>
+        </div>
+
+        <div class="export-grid">
+          <div class="export-settings">
+            <label>Video title <input id="videoTitle" type="text" value="تلاوة مباركة" maxlength="90" dir="auto"></label>
+            <label>Subtitle <input id="videoSubtitle" type="text" placeholder="Reciter name, date, or message" maxlength="120"></label>
+            <div class="inline-fields">
+              <label>Aspect ratio
+                <select id="videoAspect">
+                  <option value="vertical">Vertical 9:16</option>
+                  <option value="landscape">Landscape 16:9</option>
+                  <option value="square">Square 1:1</option>
+                </select>
+              </label>
+              <label>Theme
+                <select id="videoTheme">
+                  <option value="emerald">Emerald</option>
+                  <option value="midnight">Midnight</option>
+                  <option value="sand">Sand</option>
+                  <option value="charcoal">Charcoal</option>
+                  <option value="rose">Rose</option>
+                </select>
+              </label>
+            </div>
+            <label class="toggle"><input id="videoTransliteration" type="checkbox"><span></span> Add transliteration below the āyah</label>
+          </div>
+
+          <div class="export-preview" id="exportPreview">
+            <div class="preview-brand">TARTEEL STUDIO</div>
+            <div class="preview-title">تلاوة مباركة</div>
+            <div class="preview-ayah" id="previewAyah" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</div>
+            <div class="preview-meta" id="previewMeta">سورة الفاتحة • الآية ١</div>
+          </div>
+        </div>
+
+        <div class="export-buttons">
+          <button id="exportMp3" class="secondary-button" disabled>Export enhanced MP3</button>
+          <button id="exportWav" class="secondary-button" disabled>Export studio WAV</button>
+          <button id="exportMp4" class="primary-button large" disabled>Export live-āyah MP4</button>
+        </div>
+        <div class="progress-wrap hidden" id="exportProgress"><div class="indeterminate"></div><span>Rendering locally. Keep this tab open…</span></div>
+      </section>
+
+      <section class="panel about-panel" id="about">
+        <span class="eyebrow">IMPORTANT</span>
+        <h3>Respectful use and accuracy</h3>
+        <div class="about-grid">
+          <p>This tool enhances your own recording with cleanup, EQ, compression, ambience, and video graphics. It does not clone a real qāriʾ or claim your recitation is theirs.</p>
+          <p>It does not verify tajwīd, pronunciation, waqf, or correctness. Review exported text and audio carefully before publishing.</p>
+          <p>All recording and rendering happens on your computer through the local Node server. Nothing is sent to a third-party audio service.</p>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loader"></div>
+    <strong>Loading all 114 sūrahs…</strong>
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>

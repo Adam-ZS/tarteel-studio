@@ -1,0 +1,11 @@
+TARTEEL STUDIO — QUICK START
+
+1) Install Node.js 18 or newer from nodejs.org.
+2) Windows: double-click start.bat
+   macOS/Linux: open Terminal here and run ./start.sh
+3) The first launch installs the required packages.
+4) Open http://127.0.0.1:4173 in Chrome, Edge, Firefox, or Safari.
+5) Select a surah, record or upload audio, press Next after each ayah,
+   choose effects, then export MP3/WAV/MP4.
+
+Read README.md for full instructions and troubleshooting.

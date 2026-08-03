@@ -1,0 +1,24 @@
+{
+  "name": "tarteel-studio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local Quran recitation recording, enhancement, ayah timing, and MP4 export studio.",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "ffmpeg-static": "^5.2.0",
+    "ffprobe-static": "^3.1.0",
+    "multer": "^2.0.2",
+    "quran-json": "3.1.2",
+    "sharp": "^0.34.3"
+  }
+}
