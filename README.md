@@ -1,5 +1,11 @@
 # Tarteel Studio
 
+[![GitHub stars](https://img.shields.io/github/stars/Adam-ZS/tarteel-studio?style=flat-square&color=green)](https://github.com/Adam-ZS/tarteel-studio/stargazers)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![Node](https://img.shields.io/badge/node-%3E%3D18-339933?style=flat-square&logo=node.js&logoColor=white)](package.json)
+[![FFmpeg](https://img.shields.io/badge/ffmpeg-bundled-007808?style=flat-square&logo=ffmpeg&logoColor=white)](package.json)
+[![Live demo](https://img.shields.io/badge/demo-vercel-000000?style=flat-square&logo=vercel)](https://tarteel-studio-xi.vercel.app)
+
 A local web studio for reading the Qur'an āyah-by-āyah, recording your voice,
 processing an existing MP3/WAV/M4A recording, adding recitation-focused room
 ambience, and exporting a live-āyah MP4.
