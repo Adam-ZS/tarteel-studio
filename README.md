@@ -10,6 +10,8 @@ A local web studio for reading the Qur'an āyah-by-āyah, recording your voice,
 processing an existing MP3/WAV/M4A recording, adding recitation-focused room
 ambience, and exporting a live-āyah MP4.
 
+![Tarteel Studio preview](assets/preview.png)
+
 ## Main features
 
 - All 114 sūrahs and 6,236 āyāt after `npm install`
